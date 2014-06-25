@@ -56,7 +56,7 @@ public class WorkerRunnable implements Runnable{
                 output.flush();
             }
 
-            if(requestType.equals("sendHej")){
+            else if(requestType.equals("sendHej")){
                 System.out.println("Send Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     System.out.println("User: " + request[1] + ", Validated ");
@@ -67,13 +67,37 @@ public class WorkerRunnable implements Runnable{
                 }
             }
 
-            if(requestType.equals("checkForHejs")){
+            else if(requestType.equals("checkForHejs")){
                 System.out.println("Check for Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     String hejs = this.dbUtil.reteriveHejs(request[1]);
                     System.out.println(hejs);
                     output.write(new String(hejs + "\n").getBytes());
 
+                }
+            }
+
+            else if(requestType.equals("validateUsername")){
+                System.out.println("validate username request");
+                if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
+                    System.out.println("User: " + request[1] + ", Validated ");
+                    output.write(new String("valid" + "\n").getBytes());
+                }
+                else{
+                    System.out.println("User: " + request[1]+ ", Invalid Credentials");
+                    output.write(new String("invalid" + "\n").getBytes());
+                }
+            }
+
+            else if(requestType.equals("checkForUsername")){
+                System.out.println("check username request");
+                if(this.dbUtil.userExists(request[1])){
+                    System.out.println("User: " + request[1] + ", exists ");
+                    output.write(new String("valid" + "\n").getBytes());
+                }
+                else{
+                    System.out.println("User: " + request[1]+ ", non-existent");
+                    output.write(new String("invalid" + "\n").getBytes());
                 }
             }
 
