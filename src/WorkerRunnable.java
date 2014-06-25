@@ -35,7 +35,7 @@ public class WorkerRunnable implements Runnable{
             String[] request;
             request = BR.readLine().split(",");
             System.out.println("Request Received");
-            System.out.println(request[0]);
+            System.out.println(request);
             if(request.length < 2){
                 output.write(new String("Malformed Request: " + request + "\n").getBytes());
                 return; // this feels wrong. I want to return and kill this thread.
