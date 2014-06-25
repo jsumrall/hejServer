@@ -50,6 +50,15 @@ public class DatabaseUtils {
         return false;
     }
 
+    public boolean userExists(String username){
+        BasicDBObject doc = new BasicDBObject("name", username);
+        DBCursor cursor = this.coll.find(doc);
+        if(cursor.size() == 1){
+            return true;
+        }
+        return false;
+    }
+
     public boolean processHej(String target, String sender){
         BasicDBObject newHej = new BasicDBObject();
         newHej.append("$set", new BasicDBObject().append("hej", sender));
