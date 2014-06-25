@@ -57,7 +57,7 @@ public class WorkerRunnable implements Runnable{
                 output.flush();
             }
 
-            else if(requestType.equals("sendHej")){
+            if(requestType.equals("sendHej")){
                 System.out.println("Send Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     System.out.println("User: " + request[1] + ", Validated ");
@@ -68,7 +68,7 @@ public class WorkerRunnable implements Runnable{
                 }
             }
 
-            else if(requestType.equals("checkForHejs")){
+            if(requestType.equals("checkForHejs")){
                 System.out.println("Check for Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     String hejs = this.dbUtil.reteriveHejs(request[1]);
@@ -78,7 +78,7 @@ public class WorkerRunnable implements Runnable{
                 }
             }
 
-            else if(requestType.equals("validateUsername")){
+            if(requestType.equals("validateUsername")){
                 System.out.println("validate username request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     System.out.println("User: " + request[1] + ", Validated ");
@@ -90,7 +90,7 @@ public class WorkerRunnable implements Runnable{
                 }
             }
 
-            else if(requestType.equals("checkForUsername")){
+            if(requestType.equals("checkForUsername")){
                 System.out.println("check username request");
                 if(this.dbUtil.userExists(request[1])){
                     System.out.println("User: " + request[1] + ", exists ");
