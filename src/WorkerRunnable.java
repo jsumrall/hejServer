@@ -92,12 +92,12 @@ public class WorkerRunnable implements Runnable{
 
             if(requestType.equals("checkForUsername")){
                 System.out.println("check username request");
-                if(this.dbUtil.userExists(request[1])){
-                    System.out.println("User: " + request[1] + ", exists ");
+                if(this.dbUtil.userExists(request[3])){
+                    System.out.println("User: " + request[3] + ", exists ");
                     output.write(new String("valid" + "\n").getBytes());
                 }
                 else{
-                    System.out.println("User: " + request[1]+ ", non-existent");
+                    System.out.println("User: " + request[3]+ ", non-existent");
                     output.write(new String("invalid" + "\n").getBytes());
                 }
             }
