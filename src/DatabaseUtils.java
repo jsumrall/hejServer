@@ -75,8 +75,11 @@ public class DatabaseUtils {
     public String reteriveHejs(String user){
         BasicDBObject searchQuery = new BasicDBObject().append("name", user);
         DBCursor cursor = this.coll.find(searchQuery);
-
-        Object hejs = cursor.next().get("hej");
+        String result = "";
+        if(cursor.hasNext()) {
+            Object hejs = cursor.next().get("hej");
+            result = hejs.toString();
+        }
 
         BasicDBObject newHej = new BasicDBObject();
         newHej.append("$set", new BasicDBObject().append("hej", ""));
@@ -84,7 +87,7 @@ public class DatabaseUtils {
 
 
 
-        return hejs.toString();
+        return result;
     }
 
 
