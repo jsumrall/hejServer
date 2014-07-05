@@ -23,13 +23,15 @@ public class DatabaseUtils {
             e.printStackTrace();
         }
     }
-    public boolean UserNameIsAvailable(String username, String password){
+    public boolean UserNameIsAvailable(String username, String password, String gcmid){
         BasicDBObject doc = new BasicDBObject("name", username);
                 //.append("password", password)
                 //.append("hej", "");
         DBCursor cursor = this.coll.find(doc);
         if(cursor.size() == 0){
-            this.coll.insert(doc.append("password", password).append("hej","")); //add user is name is available
+            this.coll.insert(doc.append("password", password)
+                    .append("hej","")
+            .append("gcmid", gcmid));
             System.out.println("New User Registered: " + username);
             return true;
         }

@@ -5,6 +5,7 @@
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 
@@ -35,9 +36,9 @@ public class WorkerRunnable implements Runnable{
             String[] request;
             request = BR.readLine().split(",");
             System.out.println("Request Received");
-            System.out.println(request);
+            System.out.println(Arrays.toString(request));
             if(request.length < 2){
-                output.write(new String("Malformed Request: " + request + "\n").getBytes());
+                output.write(("Malformed Request: " + Arrays.toString(request) + "\n").getBytes());
                 return; // this feels wrong. I want to return and kill this thread.
             }
             String requestType = request[0];
@@ -47,12 +48,12 @@ public class WorkerRunnable implements Runnable{
 
             if(requestType.equals("addNewUser")){
                 System.out.println("Add new user request");
-                if(this.dbUtil.UserNameIsAvailable(request[1], request[2])){
+                if(this.dbUtil.UserNameIsAvailable(request[1], request[2], request[3])){
                     //add user to DB
-                    output.write(new String("New User added: " + request[1] + "\n").getBytes());
+                    output.write(("New User added: " + request[1] + "\n").getBytes());
                 }
                 else{
-                    output.write(new String("Username not available: " + request[1] + "\n").getBytes());
+                    output.write(("Username not available: " + request[1] + "\n").getBytes());
                 }
                 output.flush();
             }
@@ -73,7 +74,7 @@ public class WorkerRunnable implements Runnable{
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     String hejs = this.dbUtil.reteriveHejs(request[1]);
                     System.out.println(hejs);
-                    output.write(new String(hejs + "\n").getBytes());
+                    output.write((hejs + "\n").getBytes());
 
                 }
             }
@@ -82,11 +83,11 @@ public class WorkerRunnable implements Runnable{
                 System.out.println("validate username request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
                     System.out.println("User: " + request[1] + ", Validated ");
-                    output.write(new String("valid" + "\n").getBytes());
+                    output.write(("valid" + "\n").getBytes());
                 }
                 else{
                     System.out.println("User: " + request[1]+ ", Invalid Credentials");
-                    output.write(new String("invalid" + "\n").getBytes());
+                    output.write(("invalid" + "\n").getBytes());
                 }
             }
 
@@ -94,11 +95,11 @@ public class WorkerRunnable implements Runnable{
                 System.out.println("check username request");
                 if(this.dbUtil.userExists(request[3])){
                     System.out.println("User: " + request[3] + ", exists ");
-                    output.write(new String("valid" + "\n").getBytes());
+                    output.write(("valid" + "\n").getBytes());
                 }
                 else{
                     System.out.println("User: " + request[3]+ ", non-existent");
-                    output.write(new String("invalid" + "\n").getBytes());
+                    output.write(("invalid" + "\n").getBytes());
                 }
             }
 
