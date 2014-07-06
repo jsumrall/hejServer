@@ -44,7 +44,6 @@ public class WorkerRunnable implements Runnable{
             String requestType = request[0];
             request[1] = request[1].trim().toUpperCase();
             request[2] = request[2].trim();
-            if(request.length == 4){request[3] = request[3].trim().toUpperCase();}
 
             if(requestType.equals("addNewUser")){
                 System.out.println("Add new user request");
@@ -57,7 +56,7 @@ public class WorkerRunnable implements Runnable{
                 }
                 output.flush();
             }
-
+            if(request.length == 4){request[3] = request[3].trim().toUpperCase();}
             if(requestType.equals("sendHej")){
                 System.out.println("Send Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
