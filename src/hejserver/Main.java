@@ -1,12 +1,6 @@
 package hejserver;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
-
-import java.io.Console;
-import java.net.UnknownHostException;
 import java.util.Scanner;
-
+import hejserver.DatabaseUtils;
 /**
  * Created by max on 6/23/14.
  */
