@@ -1,4 +1,4 @@
-/**
+package hejserver; /**
  * Created by max on 6/23/14.
  */
 //package servers;
@@ -6,7 +6,6 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 
 public class WorkerRunnable implements Runnable{

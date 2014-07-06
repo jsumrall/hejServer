@@ -1,3 +1,5 @@
+package hejserver;
+
 import com.mongodb.*;
 
 import java.net.UnknownHostException;
@@ -68,7 +70,7 @@ public class DatabaseUtils {
         BasicDBObject searchQuery = new BasicDBObject().append("name", target);
 
         this.coll.update(searchQuery, newHej);
-
+         new GCMMessage(getGcmID(target), sender);
         return true;
     }
 
@@ -92,6 +94,17 @@ public class DatabaseUtils {
         return result;
     }
 
+
+    private String getGcmID(String user){
+        BasicDBObject searchQuery = new BasicDBObject().append("name", user);
+        DBCursor cursor = this.coll.find(searchQuery);
+        String gcmid = "";
+        if(cursor.hasNext()) {
+            Object id = cursor.next().get("gcmid");
+            gcmid = id.toString();
+        }
+        return gcmid;
+    }
 
 
 }

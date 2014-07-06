@@ -1,4 +1,4 @@
-/**
+package hejserver; /**
  * Created by max on 6/23/14.
  */
 //package servers;
