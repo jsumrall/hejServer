@@ -44,6 +44,16 @@ public class DatabaseUtils {
     }
 
 
+    public boolean validateUserNamePassword(String username, String password, String gcmid){
+        BasicDBObject doc = new BasicDBObject("name", username)
+                .append("password", password);
+        DBCursor cursor = this.coll.find(doc);
+        if(cursor.size() == 1){
+            this.coll.update(doc, doc.append("gcmid",gcmid));
+            return true;
+        }
+        return false;
+    }
     public boolean validateUserNamePassword(String username, String password){
         BasicDBObject doc = new BasicDBObject("name", username)
                 .append("password", password);

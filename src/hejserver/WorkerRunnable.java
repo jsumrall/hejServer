@@ -55,6 +55,20 @@ public class WorkerRunnable implements Runnable{
                 }
                 output.flush();
             }
+
+            if(requestType.equals("validateUsername")){
+                System.out.println("validate username request");
+                if(this.dbUtil.validateUserNamePassword(request[1], request[2], request[3])){
+                    System.out.println("User: " + request[1] + ", Validated ");
+                    output.write(("valid" + "\n").getBytes());
+                }
+                else{
+                    System.out.println("User: " + request[1]+ ", Invalid Credentials");
+                    output.write(("invalid" + "\n").getBytes());
+                }
+            }
+
+
             if(request.length == 4){request[3] = request[3].trim().toUpperCase();}
             if(requestType.equals("sendHej")){
                 System.out.println("Send Hej request");
@@ -77,17 +91,6 @@ public class WorkerRunnable implements Runnable{
                 }
             }
 
-            if(requestType.equals("validateUsername")){
-                System.out.println("validate username request");
-                if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
-                    System.out.println("User: " + request[1] + ", Validated ");
-                    output.write(("valid" + "\n").getBytes());
-                }
-                else{
-                    System.out.println("User: " + request[1]+ ", Invalid Credentials");
-                    output.write(("invalid" + "\n").getBytes());
-                }
-            }
 
             if(requestType.equals("checkForUsername")){
                 System.out.println("check username request");
