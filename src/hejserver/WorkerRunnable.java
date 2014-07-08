@@ -58,7 +58,7 @@ public class WorkerRunnable implements Runnable{
 
             if(requestType.equals("validateUsername")){
                 System.out.println("validate username request");
-                if(this.dbUtil.validateUserNamePassword(request[1], request[2], request[3])){
+                if(this.dbUtil.validateUserNamePasswordGCM(request[1], request[2], request[3])){
                     System.out.println("User: " + request[1] + ", Validated ");
                     output.write(("valid" + "\n").getBytes());
                 }
