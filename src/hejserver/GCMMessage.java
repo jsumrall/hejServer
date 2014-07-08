@@ -77,9 +77,6 @@ public class GCMMessage {
     public GCMMessage(String targetID, String sender) {
 
         Message message = new hejserver.Message.Builder()
-                .timeToLive(3)
-                .delayWhileIdle(true)
-                .dryRun(true)
                 .addData("sender", sender)
                 .build();
         try {
