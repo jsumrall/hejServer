@@ -4,6 +4,10 @@ package hejserver; /**
 //package servers;
 
 import java.net.ServerSocket;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.net.Socket;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -12,7 +16,8 @@ import java.util.concurrent.Executors;
 public class ThreadPooledServer implements Runnable{
     public DatabaseUtils dbUtil;
     protected int          serverPort   = 8080;
-    protected ServerSocket serverSocket = null;
+    protected SSLServerSocketFactory socketFactory = null;
+    protected SSLServerSocket serverSocket = null;
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
     protected ExecutorService threadPool =
@@ -21,6 +26,7 @@ public class ThreadPooledServer implements Runnable{
     public ThreadPooledServer(int port, DatabaseUtils dbUtil){
         this.dbUtil = dbUtil;
         this.serverPort = port;
+        socketFactory =  (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
     }
 
     public void run(){
@@ -29,9 +35,9 @@ public class ThreadPooledServer implements Runnable{
         }
         openServerSocket();
         while(! isStopped()){
-            Socket clientSocket = null;
+            SSLSocket clientSocket = null;
             try {
-                clientSocket = this.serverSocket.accept();
+                clientSocket = (SSLSocket) this.serverSocket.accept();
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;
@@ -64,7 +70,8 @@ public class ThreadPooledServer implements Runnable{
 
     private void openServerSocket() {
         try {
-            this.serverSocket = new ServerSocket(this.serverPort);
+            //this.serverSocket = new ServerSocket(this.serverPort);
+            this.serverSocket = (SSLServerSocket) socketFactory.createServerSocket(this.serverPort);
         } catch (IOException e) {
             throw new RuntimeException("Cannot open port 8080", e);
         }

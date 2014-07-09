@@ -3,6 +3,7 @@ package hejserver; /**
  */
 //package servers;
 
+import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
@@ -10,11 +11,11 @@ import java.util.Arrays;
 
 public class WorkerRunnable implements Runnable{
 
-    protected Socket clientSocket = null;
+    protected SSLSocket clientSocket = null;
     protected String serverText   = null;
     public DatabaseUtils dbUtil = null;
 
-    public WorkerRunnable(Socket clientSocket, String serverText, DatabaseUtils dbUtils) {
+    public WorkerRunnable(SSLSocket clientSocket, String serverText, DatabaseUtils dbUtils) {
         this.dbUtil = dbUtils;
         this.clientSocket = clientSocket;
         this.serverText   = serverText;
