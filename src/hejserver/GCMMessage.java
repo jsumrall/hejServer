@@ -80,7 +80,8 @@ public class GCMMessage {
                 .addData("sender", sender)
                 .build();
         try {
-            sendNoRetry(message, targetID);
+            System.out.println("Sending Hej to: " + targetID);
+            send(message, targetID,10);
         }
         catch (Exception e){e.printStackTrace();}
     }
