@@ -72,7 +72,7 @@ public class ThreadPooledServer implements Runnable{
         try {
             //this.serverSocket = new ServerSocket(this.serverPort);
             this.serverSocket = (SSLServerSocket) socketFactory.createServerSocket(this.serverPort);
-            final String[] enabledCipherSuites = this.serverSocket.getSupportedCipherSuites();
+            final String[] enabledCipherSuites = { "RSA_WITH_AES_128_SHA1" };
 
             this.serverSocket.setEnabledCipherSuites(enabledCipherSuites);
         } catch (IOException e) {
