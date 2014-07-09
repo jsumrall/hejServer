@@ -2,7 +2,11 @@ package hejserver;
 
 import com.mongodb.*;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.math.BigInteger;
 import java.net.UnknownHostException;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 
 /**
@@ -13,6 +17,14 @@ public class DatabaseUtils {
     MongoClient mongoClient = null;
     DB db = null;
     DBCollection coll;
+    private String SALT = "SALT";
+    private String SECUREPASSWORD = "SECUREPASSWORD";
+    private String GCMID = "GCMID";
+    private String USERNAME = "USERNAME";
+    //private String HEJ = "HEJ";
+    private static final int ITERATIONS = 1000;
+    private static final int KEY_LENGTH = 192; // bits
+    SecureRandom secureRandom;
 
     public DatabaseUtils() {
         try {
@@ -26,14 +38,18 @@ public class DatabaseUtils {
         }
     }
     public boolean UserNameIsAvailable(String username, String password, String gcmid){
-        BasicDBObject doc = new BasicDBObject("name", username);
+        secureRandom = new SecureRandom();//for generating salt
+        BasicDBObject doc = new BasicDBObject(USERNAME, username);
                 //.append("password", password)
                 //.append("hej", "");
         DBCursor cursor = this.coll.find(doc);
         if(cursor.size() == 0){
-            this.coll.insert(doc.append("password", password)
-                    .append("hej","")
-            .append("gcmid", gcmid));
+            //generate salt
+            String salt = new BigInteger(130, secureRandom).toString();
+            String securePassword = hashPassword(password, salt);
+            this.coll.insert(doc.append(SECUREPASSWORD, securePassword)
+                    .append(SALT,salt)
+            .append(GCMID, gcmid));
             System.out.println("New User Registered: " + username);
             return true;
         }
@@ -45,29 +61,36 @@ public class DatabaseUtils {
 
 
     public boolean validateUserNamePasswordGCM(String username, String password, String gcmid){
-        BasicDBObject doc = new BasicDBObject("name", username)
-                .append("password", password);
+        BasicDBObject doc = new BasicDBObject(USERNAME, username);
         DBCursor cursor = this.coll.find(doc);
         BasicDBObject updatedWithGCMID = new BasicDBObject();
-        updatedWithGCMID.append("$set",new BasicDBObject().append("gcmid", gcmid));
-        if(cursor.size() == 1){
-            this.coll.update(doc, updatedWithGCMID);
-            return true;
+        updatedWithGCMID.append("$set",new BasicDBObject().append(GCMID, gcmid));
+        if(cursor.hasNext()){
+            String salt = cursor.next().get(SALT).toString();
+            String securePassword = cursor.next().get(SECUREPASSWORD).toString();
+            if(securePassword.equals(hashPassword(password,salt))){
+                //user is authenticated
+                this.coll.update(doc, updatedWithGCMID);
+                return true;
+            }
         }
         return false;
     }
-    public boolean validateUserNamePassword(String username, String password){
-        BasicDBObject doc = new BasicDBObject("name", username)
-                .append("password", password);
+    public boolean validateUserNamePassword(String username, String password) {
+        BasicDBObject doc = new BasicDBObject(USERNAME, username);
         DBCursor cursor = this.coll.find(doc);
-        if(cursor.size() == 1){
-            return true;
+        if (cursor.hasNext()) {
+            String salt = cursor.next().get(SALT).toString();
+            String securePassword = cursor.next().get(SECUREPASSWORD).toString();
+            if (securePassword.equals(hashPassword(password, salt))) {
+                //user is authenticated
+                return true;
+            }
         }
         return false;
     }
-
     public boolean userExists(String username){
-        BasicDBObject doc = new BasicDBObject("name", username);
+        BasicDBObject doc = new BasicDBObject(USERNAME, username);
         DBCursor cursor = this.coll.find(doc);
         if(cursor.size() == 1){
             return true;
@@ -76,19 +99,17 @@ public class DatabaseUtils {
     }
 
     public boolean processHej(String target, String sender){
-        BasicDBObject newHej = new BasicDBObject();
-        newHej.append("$set", new BasicDBObject().append("hej", sender));
-
-        BasicDBObject searchQuery = new BasicDBObject().append("name", target);
-
-        this.coll.update(searchQuery, newHej);
-         new GCMMessage(getGcmID(target), sender);
+        //BasicDBObject newHej = new BasicDBObject();
+        //newHej.append("$set", new BasicDBObject().append("hej", sender));
+        //BasicDBObject searchQuery = new BasicDBObject().append("name", target);
+        //this.coll.update(searchQuery, newHej);
+        new GCMMessage(getGcmID(target), sender);
         return true;
     }
 
 
 
-    public String reteriveHejs(String user){
+    /*public String reteriveHejs(String user){
         BasicDBObject searchQuery = new BasicDBObject().append("name", user);
         DBCursor cursor = this.coll.find(searchQuery);
         String result = "";
@@ -105,19 +126,51 @@ public class DatabaseUtils {
 
         return result;
     }
-
+         */
 
     private String getGcmID(String user){
-        BasicDBObject searchQuery = new BasicDBObject().append("name", user);
+        BasicDBObject searchQuery = new BasicDBObject().append(USERNAME, user);
         DBCursor cursor = this.coll.find(searchQuery);
         String gcmid = "";
         if(cursor.hasNext()) {
-            Object id = cursor.next().get("gcmid");
+            Object id = cursor.next().get(GCMID);
             gcmid = id.toString();
         }
         return gcmid;
     }
 
+
+    public static String hashPassword(String password, String salt){
+        char[] passwordChars = password.toCharArray();
+        byte[] saltBytes = salt.getBytes();
+
+        PBEKeySpec spec = new PBEKeySpec(
+                passwordChars,
+                saltBytes,
+                ITERATIONS,
+                KEY_LENGTH
+        );
+        try {
+            SecretKeyFactory key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hashedPassword = key.generateSecret(spec).getEncoded();
+            return String.format("%x", new BigInteger(hashedPassword));
+        }
+        catch(Exception e){e.printStackTrace(); System.exit(2);}//this should only happen if the key algo is missing, which would be catastrophic
+
+        return null;//only if we crashed. Never run since there is system.exit() above.
+    }
+
+    public String getSalt(String username){
+        BasicDBObject searchQuery = new BasicDBObject().append(USERNAME, username);
+        DBCursor cursor = this.coll.find(searchQuery);
+        String salt = "";
+        if(cursor.hasNext()) {
+            Object id = cursor.next().get(SALT);
+            salt = id.toString();
+        }
+        return salt;
+
+}
 
 }
 
