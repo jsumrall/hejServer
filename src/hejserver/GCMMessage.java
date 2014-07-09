@@ -75,14 +75,13 @@ public class GCMMessage {
      *
      */
     public GCMMessage(String targetID, String sender) {
-
         Message message = new hejserver.Message.Builder()
                 .addData("sender", sender)
                 .build();
         try {
             System.out.println("Sending Hej to: " + targetID);
             Result result = sendNoRetry(message, targetID);
-            System.out.println(result.toString());
+            System.out.println(result.getMessageId().toString());
         }
         catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace();}
     }
@@ -171,7 +170,7 @@ public class GCMMessage {
             String key = entry.getKey();
             String value = entry.getValue();
             if (key == null || value == null) {
-                logger.warning("Ignoring payload entry thas has null: " + entry);
+                logger.warning("Ignoring payload entry that has null: " + entry);
             } else {
                 key = PARAM_PAYLOAD_PREFIX + key;
                 addParameter(body, key, URLEncoder.encode(value, UTF8));
