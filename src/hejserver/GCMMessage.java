@@ -82,14 +82,9 @@ public class GCMMessage {
         try {
             System.out.println("Sending Hej to: " + targetID);
             Result result = sendNoRetry(message, targetID);
-            if(result.getMessageId() == null){
-                System.out.println(result.getErrorCodeName());
-            }
-            else{
-                System.out.println(result.getMessageId());
-            }
+            System.out.println(result);
         }
-        catch (Exception e){e.printStackTrace();}
+        catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace();}
     }
 
     /**
