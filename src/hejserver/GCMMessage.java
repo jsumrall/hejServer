@@ -74,14 +74,15 @@ public class GCMMessage {
      *
      */
     public GCMMessage(String targetID, String sender) {
+        logger.setUseParentHandlers(false);
+        LogManager.getLogManager().reset();
         Message message = new hejserver.Message.Builder()
                 .addData("sender", sender)
                 .build();
         try {
             Result result = sendNoRetry(message, targetID);
             //System.out.println(result);
-            logger.setUseParentHandlers(false);
-            LogManager.getLogManager().reset();
+
             //SimpleFormatter fmt = new SimpleFormatter();
             //StreamHandler sh = new StreamHandler(System.out, fmt);
             //logger.addHandler(sh);
