@@ -81,7 +81,13 @@ public class GCMMessage {
                 .build();
         try {
             System.out.println("Sending Hej to: " + targetID);
-            System.out.println(send(message, targetID,10));
+            Result result = send(message, targetID,10);
+            if(result.getMessageId() == null){
+                System.out.println(result.getErrorCodeName());
+            }
+            else{
+                System.out.println(result.getMessageId());
+            }
         }
         catch (Exception e){e.printStackTrace();}
     }
