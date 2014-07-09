@@ -66,8 +66,9 @@ public class DatabaseUtils {
         BasicDBObject updatedWithGCMID = new BasicDBObject();
         updatedWithGCMID.append("$set",new BasicDBObject().append(GCMID, gcmid));
         if(cursor.hasNext()){
-            String salt = cursor.next().get(SALT).toString();
-            String securePassword = cursor.next().get(SECUREPASSWORD).toString();
+            DBObject result = cursor.next();
+            String salt = result.get(SALT).toString();
+            String securePassword = result.get(SECUREPASSWORD).toString();
             if(securePassword.equals(hashPassword(password,salt))){
                 //user is authenticated
                 this.coll.update(doc, updatedWithGCMID);
@@ -80,8 +81,9 @@ public class DatabaseUtils {
         BasicDBObject doc = new BasicDBObject(USERNAME, username);
         DBCursor cursor = this.coll.find(doc);
         if (cursor.hasNext()) {
-            String salt = cursor.next().get(SALT).toString();
-            String securePassword = cursor.next().get(SECUREPASSWORD).toString();
+             DBObject result = cursor.next();
+            String salt = result.get(SALT).toString();
+            String securePassword = result.get(SECUREPASSWORD).toString();
             if (securePassword.equals(hashPassword(password, salt))) {
                 //user is authenticated
                 return true;
