@@ -74,8 +74,7 @@ public class GCMMessage {
      *
      */
     public GCMMessage(String targetID, String sender) {
-        logger.setUseParentHandlers(false);
-        LogManager.getLogManager().reset();
+
         Message message = new hejserver.Message.Builder()
                 .addData("sender", sender)
                 .build();
@@ -188,10 +187,12 @@ public class GCMMessage {
             conn = post(GCM_SEND_ENDPOINT, requestBody);
             status = conn.getResponseCode();
         } catch (IOException e) {
+            System.out.println( "IOException posting to GCM"+ e);
             logger.log(Level.FINE, "IOException posting to GCM", e);
             return null;
         }
         if (status / 100 == 5) {
+            System.out.println("GCM service is unavailable (status " + status + ")");
             logger.fine("GCM service is unavailable (status " + status + ")");
             return null;
         }
@@ -211,6 +212,7 @@ public class GCMMessage {
             try {
                 responseBody = getAndClose(conn.getInputStream());
             } catch (IOException e) {
+                System.out.println("Exception reading response: "+ e);
                 logger.log(Level.WARNING, "Exception reading response: ", e);
                 // return null so it can retry
                 return null;
