@@ -81,7 +81,7 @@ public class GCMMessage {
                 .build();
         try {
             System.out.println("Sending Hej to: " + targetID);
-            Result result = send(message, targetID,10);
+            Result result = sendNoRetry(message, targetID);
             System.out.println(result.getErrorCodeName());
             System.out.println(result.getMessageId());
 
