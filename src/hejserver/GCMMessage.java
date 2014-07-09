@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
 /**
@@ -81,7 +82,9 @@ public class GCMMessage {
         try {
             System.out.println("Sending Hej to: " + targetID);
             Result result = sendNoRetry(message, targetID);
-            System.out.println(result);
+            //System.out.println(result);
+            ConsoleHandler ch = new ConsoleHandler();
+            logger.addHandler(ch);
         }
         catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace();}
     }
