@@ -81,6 +81,8 @@ public class GCMMessage {
             System.out.println("Sending Hej to: " + targetID);
             Result result = sendNoRetry(message, targetID);
             //System.out.println(result);
+            logger.setUseParentHandlers(false);
+            LogManager.getLogManager().reset();
             SimpleFormatter fmt = new SimpleFormatter();
             StreamHandler sh = new StreamHandler(System.out, fmt);
             logger.addHandler(sh);
