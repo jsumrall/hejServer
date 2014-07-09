@@ -72,7 +72,8 @@ public class ThreadPooledServer implements Runnable{
         try {
             //this.serverSocket = new ServerSocket(this.serverPort);
             this.serverSocket = (SSLServerSocket) socketFactory.createServerSocket(this.serverPort);
-            final String[] enabledCipherSuites = { "SSL_DH_anon_WITH_RC4_128_MD5" };
+            final String[] enabledCipherSuites = this.serverSocket.getSupportedCipherSuites();
+
             this.serverSocket.setEnabledCipherSuites(enabledCipherSuites);
         } catch (IOException e) {
             throw new RuntimeException("Cannot open port 8080", e);
