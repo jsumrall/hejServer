@@ -35,7 +35,7 @@ public class WorkerRunnable implements Runnable{
 
             String[] request;
             request = BR.readLine().split(",");
-            System.out.println("Request Received");
+            //System.out.println("Request Received");
             System.out.println(Arrays.toString(request));
             if(request.length < 2){
                 output.write(("Malformed Request: " + Arrays.toString(request) + "\n").getBytes());
@@ -46,7 +46,7 @@ public class WorkerRunnable implements Runnable{
             request[2] = request[2].trim();
 
             if(requestType.equals("addNewUser")){
-                System.out.println("Add new user request");
+                //System.out.println("Add new user request");
                 if(this.dbUtil.UserNameIsAvailable(request[1], request[2], request[3])){
                     //add user to DB
                     output.write(("New User added: " + request[1] + "\n").getBytes());
@@ -58,13 +58,13 @@ public class WorkerRunnable implements Runnable{
             }
 
             if(requestType.equals("validateUsername")){
-                System.out.println("validate username request");
+                //System.out.println("validate username request");
                 if(this.dbUtil.validateUserNamePasswordGCM(request[1], request[2], request[3])){
-                    System.out.println("User: " + request[1] + ", Validated ");
+                    //System.out.println("User: " + request[1] + ", Validated ");
                     output.write(("valid" + "\n").getBytes());
                 }
                 else{
-                    System.out.println("User: " + request[1]+ ", Invalid Credentials");
+                    //System.out.println("User: " + request[1]+ ", Invalid Credentials");
                     output.write(("invalid" + "\n").getBytes());
                 }
             }
@@ -72,13 +72,13 @@ public class WorkerRunnable implements Runnable{
 
             if(request.length == 4){request[3] = request[3].trim().toUpperCase();}
             if(requestType.equals("sendHej")){
-                System.out.println("Send Hej request");
+                //System.out.println("Send Hej request");
                 if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
-                    System.out.println("User: " + request[1] + ", Validated ");
+                    //System.out.println("User: " + request[1] + ", Validated ");
                     this.dbUtil.processHej(request[3],request[1]);
                 }
                 else{
-                    System.out.println("User: " + request[1]+ ", Invalid Credentials");
+                    //System.out.println("User: " + request[1]+ ", Invalid Credentials");
                 }
             }
 
@@ -94,23 +94,20 @@ public class WorkerRunnable implements Runnable{
               */
 
             if(requestType.equals("checkForUsername")){
-                System.out.println("check username request");
+                //System.out.println("check username request");
                 if(this.dbUtil.userExists(request[3])){
-                    System.out.println("User: " + request[3] + ", exists ");
+                    //System.out.println("User: " + request[3] + ", exists ");
                     output.write(("valid" + "\n").getBytes());
                 }
                 else{
-                    System.out.println("User: " + request[3]+ ", non-existent");
+                    //System.out.println("User: " + request[3]+ ", non-existent");
                     output.write(("invalid" + "\n").getBytes());
                 }
             }
 
-
-            System.out.println(responseStrBuilder);
-
             output.close();
             input.close();
-            System.out.println("Request processed: " + this.serverText);
+            //System.out.println("Request processed: " + this.serverText);
         } catch (IOException e) {
             //report exception somewhere.
             e.printStackTrace();

@@ -46,7 +46,7 @@ public class ThreadPooledServer implements Runnable{
                 throw new RuntimeException(
                         "Error accepting client connection", e);
             }
-            System.out.println("New Incoming Connection");
+            //System.out.println("New Incoming Connection");
             this.threadPool.execute(
                     new WorkerRunnable(clientSocket, "Thread Pooled Server", dbUtil));
         }
@@ -72,7 +72,7 @@ public class ThreadPooledServer implements Runnable{
         try {
             //this.serverSocket = new ServerSocket(this.serverPort);
             this.serverSocket = (SSLServerSocket) socketFactory.createServerSocket(this.serverPort);
-            final String[] enabledCipherSuites = { "SSL_DH_anon_WITH_RC4_128_MD5" };
+            final String[] enabledCipherSuites = this.serverSocket.getSupportedCipherSuites();
 
             this.serverSocket.setEnabledCipherSuites(enabledCipherSuites);
         } catch (IOException e) {
