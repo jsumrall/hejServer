@@ -49,7 +49,7 @@ public class DatabaseUtils {
             String securePassword = hashPassword(password, salt);
             this.coll.insert(doc.append(SECUREPASSWORD, securePassword)
                     .append(SALT,salt)
-            .append(GCMID, gcmid));
+                    .append(GCMID, gcmid));
             System.out.println("New User Registered: " + username);
             return true;
         }
