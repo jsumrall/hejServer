@@ -6,8 +6,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
+import java.util.logging.*;
 
 /**
  * Created by max on 7/6/14.
@@ -47,7 +46,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * Helper class to send messages to the GCM service using an API Key.
@@ -83,8 +81,9 @@ public class GCMMessage {
             System.out.println("Sending Hej to: " + targetID);
             Result result = sendNoRetry(message, targetID);
             //System.out.println(result);
-            ConsoleHandler ch = new ConsoleHandler();
-            logger.addHandler(ch);
+            SimpleFormatter fmt = new SimpleFormatter();
+            StreamHandler sh = new StreamHandler(System.out, fmt);
+            logger.addHandler(sh);
         }
         catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace();}
     }
