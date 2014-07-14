@@ -3,6 +3,10 @@ package hejserver; /**
  */
 //package servers;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
@@ -14,6 +18,13 @@ public class WorkerRunnable implements Runnable{
     protected SSLSocket clientSocket = null;
     protected String serverText   = null;
     public DatabaseUtils dbUtil = null;
+    public static final String NEW_ACCOUNT = "addNewUser";
+    public static final String UPDATE_REGID = "updateregid";
+    public static final String VALIDATE_USER_NAME = "validateUsername";
+    public static final String CHECK_FOR_USERNAME = "checkForUsername";
+    public static final String SEND_HEJ = "sendHej";
+    JSONObject message;
+
 
     public WorkerRunnable(SSLSocket clientSocket, String serverText, DatabaseUtils dbUtils) {
         this.dbUtil = dbUtils;
@@ -21,7 +32,13 @@ public class WorkerRunnable implements Runnable{
         this.serverText   = serverText;
     }
 
+
     public void run() {
+        String username = "";
+        String password = "";
+        String target = "";
+        String intent = "";
+        String regid = "";
         try {
             InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
@@ -34,32 +51,33 @@ public class WorkerRunnable implements Runnable{
             StringBuilder responseStrBuilder = new StringBuilder();
 
             String[] request;
-            request = BR.readLine().split(",");
-            //System.out.println("Request Received");
-            System.out.println(Arrays.toString(request));
-            if(request.length < 2){
-                output.write(("Malformed Request: " + Arrays.toString(request) + "\n").getBytes());
-                return; // this feels wrong. I want to return and kill this thread.
+            try {
+                message = new JSONObject(BR.readLine());
+                username = message.getString("username").toUpperCase();
+                password = message.getString("password");
+                target = message.getString("target").toUpperCase();
+                intent = message.getString("intent");
+                regid = message.getString("regid");
             }
-            String requestType = request[0];
-            request[1] = request[1].trim().toUpperCase();
-            request[2] = request[2].trim();
+            catch(JSONException e){e.printStackTrace();}
+            System.out.println(message);
 
-            if(requestType.equals("addNewUser")){
+
+            if(intent.equals(NEW_ACCOUNT)){
                 //System.out.println("Add new user request");
-                if(this.dbUtil.UserNameIsAvailable(request[1], request[2], request[3])){
+                if(this.dbUtil.UserNameIsAvailable(username,password,regid)){
                     //add user to DB
-                    output.write(("New User added: " + request[1] + "\n").getBytes());
+                    output.write(("New User added: " + username + "\n").getBytes());
                 }
                 else{
-                    output.write(("Username not available: " + request[1] + "\n").getBytes());
+                    output.write(("Username not available: " + username + "\n").getBytes());
                 }
                 output.flush();
             }
 
-            if(requestType.equals("validateUsername")){
+            if(intent.equals(VALIDATE_USER_NAME)){
                 //System.out.println("validate username request");
-                if(this.dbUtil.validateUserNamePasswordGCM(request[1], request[2], request[3])){
+                if(this.dbUtil.validateUserNamePasswordGCM(username,password,regid)){
                     //System.out.println("User: " + request[1] + ", Validated ");
                     output.write(("valid" + "\n").getBytes());
                 }
@@ -70,32 +88,18 @@ public class WorkerRunnable implements Runnable{
             }
 
 
-            if(request.length == 4){request[3] = request[3].trim().toUpperCase();}
-            if(requestType.equals("sendHej")){
+            if(intent.equals(SEND_HEJ)){
                 //System.out.println("Send Hej request");
-                if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
+                if(this.dbUtil.validateUserNamePassword(username,password)){
                     //System.out.println("User: " + request[1] + ", Validated ");
-                    this.dbUtil.processHej(request[3],request[1]);
+                    this.dbUtil.processHej(target,username);
                 }
-                else{
-                    //System.out.println("User: " + request[1]+ ", Invalid Credentials");
-                }
+
             }
 
-            /*if(requestType.equals("checkForHejs")){
-                System.out.println("Check for Hej request");
-                if(this.dbUtil.validateUserNamePassword(request[1], request[2])){
-                    String hejs = this.dbUtil.reteriveHejs(request[1]);
-                    System.out.println(hejs);
-                    output.write((hejs + "\n").getBytes());
-
-                }
-            }
-              */
-
-            if(requestType.equals("checkForUsername")){
+            if(intent.equals(CHECK_FOR_USERNAME)){
                 //System.out.println("check username request");
-                if(this.dbUtil.userExists(request[3])){
+                if(this.dbUtil.userExists(target)){
                     //System.out.println("User: " + request[3] + ", exists ");
                     output.write(("valid" + "\n").getBytes());
                 }

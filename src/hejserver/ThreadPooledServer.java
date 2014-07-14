@@ -15,13 +15,13 @@ import java.util.concurrent.Executors;
 
 public class ThreadPooledServer implements Runnable{
     public DatabaseUtils dbUtil;
-    protected int          serverPort   = 8080;
+    protected int          serverPort   = 7070;
     protected SSLServerSocketFactory socketFactory = null;
     protected SSLServerSocket serverSocket = null;
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
     protected ExecutorService threadPool =
-            Executors.newFixedThreadPool(10);
+            Executors.newFixedThreadPool(40);
 
     public ThreadPooledServer(int port, DatabaseUtils dbUtil){
         this.dbUtil = dbUtil;
