@@ -8,7 +8,7 @@ import hejserver.DatabaseUtils;
 public class Main {
 
     public static void main(String[] args){
-        int port = 8000;
+        int port = 9000;
         DatabaseUtils dbUtil = new DatabaseUtils();
         ThreadPooledServer server = new ThreadPooledServer(port, dbUtil);
         Thread t = new Thread(server);
