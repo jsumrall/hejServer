@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 public class ThreadPooledServer implements Runnable{
     public DatabaseUtils dbUtil;
-    protected int          serverPort   = 8080;
+    protected int          serverPort   = 7070;
     protected SSLServerSocketFactory socketFactory = null;
     protected SSLServerSocket serverSocket = null;
     protected boolean      isStopped    = false;
