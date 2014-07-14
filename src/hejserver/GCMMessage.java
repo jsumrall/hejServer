@@ -32,11 +32,6 @@ import static hejserver.Constants.TOKEN_CANONICAL_REG_ID;
 import static hejserver.Constants.TOKEN_ERROR;
 import static hejserver.Constants.TOKEN_MESSAGE_ID;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
