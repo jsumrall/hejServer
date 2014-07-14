@@ -23,7 +23,11 @@ public class WorkerRunnable implements Runnable{
     public static final String VALIDATE_USER_NAME = "validateUsername";
     public static final String CHECK_FOR_USERNAME = "checkForUsername";
     public static final String SEND_HEJ = "sendHej";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAIL = "FAIL";
     JSONObject message;
+    InputStream input;
+    OutputStream output;
 
 
     public WorkerRunnable(SSLSocket clientSocket, String serverText, DatabaseUtils dbUtils) {
@@ -40,8 +44,8 @@ public class WorkerRunnable implements Runnable{
         String intent = "";
         String regid = "";
         try {
-            InputStream input  = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream();
+            this.input  = clientSocket.getInputStream();
+            this.output = clientSocket.getOutputStream();
             //long time = System.currentTimeMillis();
             /*output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
                     this.serverText + " - " +
@@ -67,10 +71,10 @@ public class WorkerRunnable implements Runnable{
                 //System.out.println("Add new user request");
                 if(this.dbUtil.UserNameIsAvailable(username,password,regid)){
                     //add user to DB
-                    output.write(("New User added: " + username + "\n").getBytes());
+                    respondSuccess();
                 }
                 else{
-                    output.write(("Username not available: " + username + "\n").getBytes());
+                    respondFail();
                 }
                 output.flush();
             }
@@ -78,12 +82,10 @@ public class WorkerRunnable implements Runnable{
             if(intent.equals(VALIDATE_USER_NAME)){
                 //System.out.println("validate username request");
                 if(this.dbUtil.validateUserNamePasswordGCM(username,password,regid)){
-                    //System.out.println("User: " + request[1] + ", Validated ");
-                    output.write(("valid" + "\n").getBytes());
+                    respondSuccess();
                 }
                 else{
-                    //System.out.println("User: " + request[1]+ ", Invalid Credentials");
-                    output.write(("invalid" + "\n").getBytes());
+                    respondFail();
                 }
             }
 
@@ -100,12 +102,10 @@ public class WorkerRunnable implements Runnable{
             if(intent.equals(CHECK_FOR_USERNAME)){
                 //System.out.println("check username request");
                 if(this.dbUtil.userExists(target)){
-                    //System.out.println("User: " + request[3] + ", exists ");
-                    output.write(("valid" + "\n").getBytes());
+                    respondSuccess();
                 }
                 else{
-                    //System.out.println("User: " + request[3]+ ", non-existent");
-                    output.write(("invalid" + "\n").getBytes());
+                    respondFail();
                 }
             }
 
@@ -116,5 +116,21 @@ public class WorkerRunnable implements Runnable{
             //report exception somewhere.
             e.printStackTrace();
         }
+    }
+    private void respondSuccess(){
+        try {
+            this.output.write((SUCCESS + "\n").getBytes());
+        }
+        catch(Exception e){e.printStackTrace();}
+
+
+    }
+    private void respondFail(){
+        try {
+            this.output.write((FAIL + "\n").getBytes());
+
+        }
+        catch (Exception e){e.printStackTrace();}
+
     }
 }
