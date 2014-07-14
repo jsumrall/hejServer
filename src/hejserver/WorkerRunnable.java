@@ -62,9 +62,10 @@ public class WorkerRunnable implements Runnable{
                 target = message.getString("target").toUpperCase();
                 intent = message.getString("intent");
                 regid = message.getString("regid");
+                System.out.println(message.toString(1));
             }
             catch(JSONException e){e.printStackTrace();}
-            System.out.println(message);
+
 
 
             if(intent.equals(NEW_ACCOUNT)){
