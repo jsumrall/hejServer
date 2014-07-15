@@ -62,7 +62,7 @@ public class WorkerRunnable implements Runnable{
                 target = message.getString("target").toUpperCase();
                 intent = message.getString("intent");
                 regid = message.getString("regid");
-                System.out.println(message.toString(1).replaceAll("\"password\": \".*", ""));
+                System.out.println(message.toString(1).replaceAll("\"password\": \".*\n", ""));
             }
             catch(JSONException e){e.printStackTrace();}
 
