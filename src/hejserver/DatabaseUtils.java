@@ -107,14 +107,15 @@ public class DatabaseUtils {
         //this.coll.update(searchQuery, newHej);
         GCMMessage msg = new GCMMessage(getGcmID(target), sender);
         Result result = msg.sendHej();
-        System.out.println(result);
         return true;
     }
 
     public boolean checkGCMID(String newGCMID){
-        GCMMessage msg = new GCMMessage(newGCMID, "Hej Server");
+        GCMMessage msg = new GCMMessage(newGCMID, "Hej Server: Welcome to Hej!");
         Result result = msg.sendHej();
-        System.out.println(result);
+        if(result.getErrorCodeName() != null) {
+            return false;
+        }
         return true;
 
     }
