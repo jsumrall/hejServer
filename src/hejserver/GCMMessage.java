@@ -64,24 +64,33 @@ public class GCMMessage {
 
     private final String key = "AIzaSyAFNCTdeyppDc3x5Y54nL5LUSB7kc12uuw";
 
+    private Message message;
+    private String targetID;
+
     /**
      * Default constructor.
      *
      */
     public GCMMessage(String targetID, String sender) {
 
-        Message message = new hejserver.Message.Builder()
+        this.targetID = targetID;
+        this.message = new hejserver.Message.Builder()
                 .addData("sender", sender)
                 .build();
+    }
+
+    public Result sendHej(){
+        Result result = null;
         try {
-            Result result = sendNoRetry(message, targetID);
+            result = sendNoRetry(this.message, this.targetID);
             //System.out.println(result);
 
             //SimpleFormatter fmt = new SimpleFormatter();
             //StreamHandler sh = new StreamHandler(System.out, fmt);
             //logger.addHandler(sh);
         }
-        catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace();}
+        catch (Exception e){System.out.println("Problem with GCM"); e.printStackTrace(); return result;}
+        return result;
     }
 
     /**

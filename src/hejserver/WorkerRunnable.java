@@ -70,7 +70,7 @@ public class WorkerRunnable implements Runnable{
 
             if(intent.equals(NEW_ACCOUNT)){
                 //System.out.println("Add new user request");
-                if(this.dbUtil.UserNameIsAvailable(username,password,regid)){
+                if(this.dbUtil.checkGCMID(regid) && this.dbUtil.UserNameIsAvailable(username,password,regid)){
                     //add user to DB
                     respondSuccess();
                 }

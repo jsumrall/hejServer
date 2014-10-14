@@ -105,8 +105,18 @@ public class DatabaseUtils {
         //newHej.append("$set", new BasicDBObject().append("hej", sender));
         //BasicDBObject searchQuery = new BasicDBObject().append("name", target);
         //this.coll.update(searchQuery, newHej);
-        new GCMMessage(getGcmID(target), sender);
+        GCMMessage msg = new GCMMessage(getGcmID(target), sender);
+        Result result = msg.sendHej();
+        System.out.println(result);
         return true;
+    }
+
+    public boolean checkGCMID(String newGCMID){
+        GCMMessage msg = new GCMMessage(newGCMID, "Hej Server");
+        Result result = msg.sendHej();
+        System.out.println(result);
+        return true;
+
     }
 
 
