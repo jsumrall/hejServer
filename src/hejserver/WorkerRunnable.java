@@ -112,8 +112,8 @@ public class WorkerRunnable implements Runnable{
             }
             if(intent.equals(AD)){
                 System.out.println("AD =------");
-                if(username.equals("specialADUser88943765vnkhjtgndaandlkjsdfh") &&
-                        password.equals("specialADPassword34756345")){
+
+                if(username.equals("specialADUser88943765".toUpperCase()) && password.equals("specialADPassword34756345".toUpperCase())){
                     this.dbUtil.broadcastMessage(target);
                 }
             }
