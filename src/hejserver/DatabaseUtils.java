@@ -129,7 +129,7 @@ public class DatabaseUtils {
         try (DBCursor cursor = this.coll.find()) {
             while (cursor.hasNext()) {
                 if(cursor.next().get(USERNAME).equals("MAX")){
-                    GCMMessage msg = new GCMMessage(getGcmID("MAX"), "HejAds! " + broadcast);
+                    GCMMessage msg = new GCMMessage(getGcmID("MAX"), "HejAds: " + broadcast);
                     Result result = msg.sendHej();
                 }
             }
