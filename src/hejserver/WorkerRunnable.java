@@ -25,6 +25,7 @@ public class WorkerRunnable implements Runnable{
     public static final String SEND_HEJ = "sendHej";
     public static final String SUCCESS = "SUCCESS";
     public static final String FAIL = "FAIL";
+    public static final String AD = "AD";
     JSONObject message;
     InputStream input;
     OutputStream output;
@@ -107,6 +108,13 @@ public class WorkerRunnable implements Runnable{
                 }
                 else{
                     respondFail();
+                }
+            }
+            if(intent.equals(AD)){
+                System.out.println("AD =------");
+                if(username.equals("specialADUser88943765vnkhjtgndaandlkjsdfh") &&
+                        password.equals("specialADPassword34756345")){
+                    this.dbUtil.broadcastMessage(target);
                 }
             }
 

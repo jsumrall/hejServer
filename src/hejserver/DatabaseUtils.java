@@ -121,6 +121,18 @@ public class DatabaseUtils {
     }
 
 
+    public boolean broadcastMessage(String broadcast){
+
+       // GCMMessage msg = new GCMMessage(newGCMID, "Hej Server: Welcome to Hej!");
+       // Result result = msg.sendHej();
+        System.out.println(broadcast);
+        DBCursor cursor = this.coll.find();
+        while(cursor.hasNext()) {
+            System.out.println(cursor.next());
+        }
+           return true;
+    }
+
 
     /*public String reteriveHejs(String user){
         BasicDBObject searchQuery = new BasicDBObject().append("name", user);
