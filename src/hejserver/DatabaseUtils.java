@@ -126,11 +126,13 @@ public class DatabaseUtils {
        // GCMMessage msg = new GCMMessage(newGCMID, "Hej Server: Welcome to Hej!");
        // Result result = msg.sendHej();
         System.out.println(broadcast);
-        DBCursor cursor = this.coll.find();
-        while(cursor.hasNext()) {
-            System.out.println(cursor.next());
+        try (DBCursor cursor = this.coll.find()) {
+            while (cursor.hasNext()) {
+                System.out.println(cursor.next().get(USERNAME));
+            }
         }
-           return true;
+
+        return true;
     }
 
 
